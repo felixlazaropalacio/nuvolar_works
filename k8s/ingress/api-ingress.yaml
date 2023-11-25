@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.allow-http: "false"
+    kubernetes.io/ingress.global-static-ip-name: api-gateway-ingress-ip-address
+  name: api-ingress
+  namespace: nuvolar
+spec:
+  defaultBackend:
+    service:
+      name: api-gateway-service
+      port:
+        number: 8080
+  rules:
+  - host: nuvolar.works.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: api-gateway-service
+            port:
+              number: 8080
+        path: /order
+        pathType: Prefix
+  tls:
+  - hosts:
+    - nuvolar.works.com
+    secretName: nuvolar-ssl-cert-secret
